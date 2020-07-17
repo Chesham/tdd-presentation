@@ -1,5 +1,6 @@
 #pragma once
-#include "genders.h"
+#include "useritem.h"
+#include "securityservice.h"
 #include <cstddef>
 #include <memory>
 
@@ -15,8 +16,8 @@ namespace libpos
     {
         virtual ~PosService() { }
 
-        virtual std::size_t calcPrice(Genders gender) const = 0;
+        virtual std::size_t calcPrice(const UserItem& user) const = 0;
 
-        static LIBPOSAPI std::shared_ptr<PosService> create();
+        static LIBPOSAPI std::shared_ptr<PosService> create(const std::shared_ptr<SecurityService>& securityService);
     };
 }

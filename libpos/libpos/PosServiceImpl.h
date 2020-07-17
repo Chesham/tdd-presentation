@@ -5,8 +5,14 @@ namespace libpos
 {
     class PosServiceImpl : public PosService
     {
+    protected:
+
+        std::shared_ptr<SecurityService> securityService;
+
     public:
 
-        virtual std::size_t calcPrice(Genders gender) const override;
+        PosServiceImpl(const std::shared_ptr<SecurityService>& securityService);
+
+        virtual std::size_t calcPrice(const UserItem& user) const override;
     };
 }

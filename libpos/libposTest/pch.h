@@ -8,5 +8,6 @@
 #define PCH_H
 
 #include <CppUnitTest.h>
+#include <fakeit.hpp>
 
 #endif //PCH_H

@@ -5,9 +5,16 @@ using namespace std;
 
 namespace libpos
 {
-    size_t PosServiceImpl::calcPrice(Genders gender) const
+    PosServiceImpl::PosServiceImpl(const shared_ptr<SecurityService>& securityService) :
+        securityService(securityService)
     {
-        switch (gender)
+    }
+
+    size_t PosServiceImpl::calcPrice(const UserItem& user) const
+    {
+        if (securityService && securityService->issued(user))
+            throw IssuedUserException("invalid user.");
+        switch (user.gender)
         {
         case libpos::Genders::male:
             return 300;
