@@ -1,0 +1,3 @@
+[submodule ".modules/FakeIt"]
+	path = .modules/FakeIt
+	url = https://github.com/eranpeer/FakeIt.git
