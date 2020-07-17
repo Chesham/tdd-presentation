@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include <libpos/libpos.h>
 using namespace std;
+using namespace std::chrono;
 using namespace libpos;
 using namespace fakeit;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -11,18 +12,56 @@ namespace libposTest
     {
     public:
 
-        TEST_METHOD(測試男生價格)
+        struct Context
         {
-            auto target = PosService::create(nullptr);
+            shared_ptr<PosService> makeService(int weekDay = 0)
+            {
+                if (weekDay < 0 || weekDay > 6)
+                    throw runtime_error("invalid week day.");
+                auto datetimeFunc = [=]
+                {
+                    tm tm{ 0 };
+                    tm.tm_year = 120;
+                    tm.tm_mon = 6;
+                    tm.tm_mday = 12 + weekDay;
+                    return system_clock::from_time_t(mktime(&tm));
+                };
+                return PosService::create(nullptr, datetimeFunc);
+            }
+        };
+
+        TEST_METHOD(測試一般男生價格)
+        {
+            Context ctx;
+            auto target = ctx.makeService();
             auto expect = (size_t)300;
             auto actual = target->calcPrice({ {}, {}, Genders::male });
             Assert::AreEqual(expect, actual);
         }
 
-        TEST_METHOD(測試女生價格)
+        TEST_METHOD(測試一般女生價格)
         {
-            auto target = PosService::create(nullptr);
+            Context ctx;
+            auto target = ctx.makeService();
             auto expect = (size_t)600;
+            auto actual = target->calcPrice({ {}, {}, Genders::female });
+            Assert::AreEqual(expect, actual);
+        }
+
+        TEST_METHOD(測試淑女之夜男生價格)
+        {
+            Context ctx;
+            auto target = ctx.makeService(3);
+            auto expect = (size_t)600;
+            auto actual = target->calcPrice({ {}, {}, Genders::male });
+            Assert::AreEqual(expect, actual);
+        }
+
+        TEST_METHOD(測試淑女之夜女生價格)
+        {
+            Context ctx;
+            auto target = ctx.makeService(3);
+            auto expect = (size_t)0;
             auto actual = target->calcPrice({ {}, {}, Genders::female });
             Assert::AreEqual(expect, actual);
         }
