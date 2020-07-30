@@ -5,8 +5,8 @@ using namespace std::chrono;
 
 namespace libpos
 {
-    shared_ptr<PosService> PosService::create(const shared_ptr<SecurityService>& securityService, const function<system_clock::time_point()>& datetimeFunc)
+    shared_ptr<PosService> PosService::create(const PosServiceConfiguration& config)
     {
-        return make_shared<PosServiceImpl>(securityService, datetimeFunc);
+        return make_shared<PosServiceImpl>(config);
     }
 }

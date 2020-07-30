@@ -1,6 +1,8 @@
 #pragma once
 #include "useritem.h"
 #include <stdexcept>
+#include <functional>
+#include <memory>
 
 namespace libpos
 {
@@ -16,5 +18,7 @@ namespace libpos
         virtual ~SecurityService() { }
 
         virtual bool issued(const UserItem& user) const = 0;
+
+        virtual void issued(const UserItem& user, std::weak_ptr<std::function<void(bool)>> completeEvent) const = 0;
     };
 }

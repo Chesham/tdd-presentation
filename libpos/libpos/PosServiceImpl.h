@@ -7,16 +7,16 @@ namespace libpos
     {
     protected:
 
-        std::shared_ptr<SecurityService> securityService;
-
-        std::function<std::chrono::system_clock::time_point()> datetimeFunc;
+        PosServiceConfiguration config;
 
         bool isLadyNight() const;
 
     public:
 
-        PosServiceImpl(const std::shared_ptr<SecurityService>& securityService, const std::function<std::chrono::system_clock::time_point()>& datetimeFunc);
+        PosServiceImpl(const PosServiceConfiguration& config);
 
         virtual std::size_t calcPrice(const UserItem& user) const override;
+
+        virtual std::shared_ptr<std::function<void(std::shared_future<std::size_t>&)>> calcPrice(const UserItem& user, const std::function<void(std::shared_future<std::size_t>&)>& completeEvent) const override;
     };
 }
